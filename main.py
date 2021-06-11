@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # Edged Image
     # plt.imshow(img.eimg,'gray')
     # plt.show()
-    scene = img.eimg
-    board = np.zeros_like(scene)
-    print(board.shape)
+    # scene = img.eimg
+    # board = np.zeros_like(scene)
+    # print(board.shape)
 
