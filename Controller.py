@@ -1,60 +1,37 @@
-import time
 import numpy as np
-import RPi.GPIO as GPIO
 from Motor import Motor
 
-def GCD(a,b):
-    while b:
-       a, b = b, a%b
-    return a
-
-def LCM(a,b):
-    return a*b/GCD(a,b)
-
-def sign(a):
-    if a>0:
-        return 1
-    elif a<0:
-        return -1
-    else:
-        return 0
-
+# TODO check how many rotations it takes to cover the whole board
 class Controller:
-    def __init__(self):
-        pass
+    # XMAX = 1900
+    # yMax = 1780
+    def __init__(self,scene,board):
+        self.mx,self.my = (Motor(11,13),Motor(15,16))
+        self.initPos()
+        self.z = False
 
-    def motor_step(self,stepper1,step1,stepper2,step2,speed):
-        dir1,dir2 = (step1,step2)
-        step1,step2 = (np.abs(step1),np.abs(step2))
-        
-        if step1==0:
-            total_micro_step=step2
-            micro_step2=1
-            micro_step1=step2+100
+    def moveAt(self,x,y,draw=False,adjacent=False,left=True):
+        # TODO write code to move at x,y
+        self.mx.move(x-self.x)
+        self.my.move(y-self.y)
 
-        elif step2==0:
-            total_micro_step=step1
-            micro_step1=1
-            micro_step2=step1+100
-
-        else:
-            total_micro_step=LCM(step1,step2)
-            micro_step1=total_micro_step/step1
-            micro_step2=total_micro_step/step2
-
-        T=np.sqrt(step1**2+step2**2)/speed
-        dt=T/total_micro_step
-    
-        for i in range(1,total_micro_step+1):
-            time_laps=0
-            if ((i % micro_step1)==0):
-                stepper1.move(dir1,1,dt/4.0)
-                time_laps+=dt/4.0
-                
-            if ((i % micro_step2)==0):
-                stepper2.move(dir2,1,dt/4.0)
-                time_laps+=dt/4.0
+        self.x, self.y = (x,y)
+        if draw: self.pencil(True)
+        if not adjacent: self.pencil(False)
             
-            time.sleep(dt-time_laps)
+    def pencil(self,draw):
+        if draw:
+            # TODO Write code to move servo for drawing 
+            self.z = True
+        else:
+            # TODO code to move pencil to initial position
+            self.z = False
+    
+    def initPos(self):
+        self.pencil(False)
+        # TODO try to move motors mx and my to right and bottom as much as possible
+        self.moveAt(0,0,draw=False)
+        
 
-        return 0
+
+# motors can be move in steps

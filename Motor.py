@@ -1,43 +1,18 @@
-import time
 import RPi.GPIO as GPIO
+from RpiMotorLib import RpiMotorLib
+import time
 
-phase_seq=[[1,0,0,0],[1,1,0,0],[0,1,0,0],[0,1,1,0],[0,0,1,0],[0,0,1,1],[0,0,0,1],[1,0,0,1]]
-num_phase=len(phase_seq)
 
 class Motor:
-    phase, direction, position = (0,0,0)
-    # Pin numbers
-    a1,a2,b1,b2 = (0,0,0,0)
+    def __init__(self,dir_pin,step_pin):
+        self.motor = RpiMotorLib.A4988Nema(dir_pin, step_pin, (21,21,21), "DRV8825") #Here MS1,MS2,MS3 are all connected to 21 and equal to zero
+        self.dir_pin,self.step_pin = (dir_pin,step_pin)
 
-    def __init__(self,a1,a2,b1,b2):
-        GPIO.setmode(GPIO.BOARD)
-        
-        self.a1,self.a2,self.b1,self.b2 = (a1,a2,b1,b2)
-        
-        GPIO.setup(self.a1,GPIO.OUT)
-        GPIO.setup(self.a2,GPIO.OUT)
-        GPIO.setup(self.b1,GPIO.OUT)
-        GPIO.setup(self.b2,GPIO.OUT)
+    def move(self,steps,delay=0.05):
+        self.clockwise,self.steps = ((steps > 0),abs(steps))
+        # GPIO.output(self.en_pin,GPIO.LOW) # pull enable to low to enable motor
+        # (True=Clockwise; False=Counter-Clockwise,Step type (Full,Half,1/4,1/8,1/16,1/32),number of steps,step delay [sec],True = print verbose output,# initial delay [sec])
+        self.motor.motor_go(self.clockwise,"Full", steps, .0005, False, delay)
 
-        print("Steppers Configured")
-        self.phase,self.direction, self.position = (0,0,0)
-    
-    def move(self, direction, steps, delay=0.2):
-        for _ in range(steps):
-            next_phase=(self.phase+direction) % num_phase
-            
-            GPIO.output(self.a1,phase_seq[next_phase][0])
-            GPIO.output(self.b2,phase_seq[next_phase][1])
-            GPIO.output(self.a2,phase_seq[next_phase][2])
-            GPIO.output(self.b1,phase_seq[next_phase][3])
-            
-            self.phase, self.direction= (next_phase, direction)
-            self.position+=direction
-        
-            time.sleep(delay)
-        
-    def unhold(self):
-        GPIO.output(self.a1,0)
-        GPIO.output(self.a2,0)
-        GPIO.output(self.b1,0)
-        GPIO.output(self.b2,0)
+    def cleanup(self):
+        GPIO.cleanup() # clear GPIO allocations after run

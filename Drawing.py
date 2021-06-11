@@ -22,7 +22,7 @@ class Drawing:
                 break
 
     def draw(self,x,y):
-        if self.board[x,y] == 1:
+        if self.board[x,y] > 1:
             if y == len(self.board[x])-1 or y == 0: self.end = True
             if self.end:
                 adjacent = (x < len(self.board)-1 and self.board[x+1,y] == 1)

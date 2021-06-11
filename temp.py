@@ -11,8 +11,6 @@ if __name__ == '__main__':
         inp = input(":")
         if inp == "q":
             break
-        inp = int(inp)
-        dire = (inp > 0)
         # m1.move(dire,abs(inp))
-        m2.move(dire,abs(inp))
+        m2.move(inp)
 

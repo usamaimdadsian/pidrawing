@@ -32,7 +32,7 @@ class Image:
 
         imgOutlinedTemp = cv2.addWeighted(imgOutlinedBlackWhite,1,imgOutlinedColour,1,0) #merges two photos together
         imgOutlined = cv2.addWeighted(imgOutlinedTemp,1,imgOutlinedGrayscale,1,0)#merges a third to it
-        # imgOutlined = cv2.bitwise_not(imgOutlined)
+        imgOutlined = cv2.bitwise_not(imgOutlined)
         self.eimg = imgOutlined
 
 
