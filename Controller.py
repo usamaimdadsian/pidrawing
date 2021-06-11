@@ -1,5 +1,8 @@
+import time
 import numpy as np
 from Motor import Motor
+import RPi.GPIO as GPIO
+from RpiMotorLib import RpiMotorLib
 
 # TODO check how many rotations it takes to cover the whole board
 class Controller:
@@ -7,6 +10,12 @@ class Controller:
     # yMax = 1780
     def __init__(self,scene,board):
         self.mx,self.my = (Motor(11,13),Motor(15,16))
+        self.x, self.y = (0,0)
+
+
+        GPIO.setup(25, GPIO.OUT)
+        self.p = GPIO.PWM(25, 50)
+        self.p.start(11)
         self.initPos()
         self.z = False
 
@@ -22,10 +31,13 @@ class Controller:
     def pencil(self,draw):
         if draw:
             # TODO Write code to move servo for drawing 
+            self.p.ChangeDutyCycle(5)
             self.z = True
         else:
             # TODO code to move pencil to initial position
+            self.p.ChangeDutyCycle(11)
             self.z = False
+        time.sleep(0.5)
     
     def initPos(self):
         self.pencil(False)

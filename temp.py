@@ -12,5 +12,5 @@ if __name__ == '__main__':
         if inp == "q":
             break
         # m1.move(dire,abs(inp))
-        m2.move(inp)
+        m2.move(int(inp))
 
