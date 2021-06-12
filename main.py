@@ -21,16 +21,18 @@ if __name__ == '__main__':
 
 
     # My Image
-    gimg = cv2.imread("img.jpeg",0)
+    gimg = cv2.imread("index.jpeg",0)
     igimg = 255 - gimg
     blurred_img = cv2.GaussianBlur(igimg, (21,21),0)
     inv_blurred_img = 255 - blurred_img
     pencil_sketch_img = cv2.divide(gimg,inv_blurred_img, scale = 256.0)
     pencil_sketch_img = cv2.bitwise_not(pencil_sketch_img)
     pencil_sketch_img[pencil_sketch_img>127] = 255
-    img_y, img_x = pencil_sketch_img.shape[:2]
-    img = cv2.resize(pencil_sketch_img,(0,0), fx=178/img_x, fy=190/img_y, interpolation = cv2.INTER_AREA)
-    img[img>0] = 1
+    img = pencil_sketch_img
+    img = cv2.medianBlur(img,11)
+    img_y, img_x = img.shape[:2]
+    img = cv2.resize(img,(0,0), fx=178/img_x, fy=190/img_y, interpolation = cv2.INTER_AREA)
+    img[img > 127] =1
 
     scene = img
     board = np.zeros_like(scene)
