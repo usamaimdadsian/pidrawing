@@ -39,12 +39,15 @@ class Drawing:
                 lines.append({"start": index,"end":None})
 
         for line in lines:
+            x1,y1 = line["start"]
             if line["end"]:
-                self.controller.moveAt(*line["start"],True,True)
-                self.controller.moveAt(*line["end"],True,False)
+                x2,y2 = line["end"]
+                self.controller.moveAt(x1*10,y1*10,True,True)
+                self.controller.moveAt(x2*10,y2*10,True,False)
             else:
-                self.controller.moveAt(*line["start"],True,False)
-
+                self.controller.moveAt(x1*10,y1*10,True,False)
+            # break
+        self.controller.initPos()
 
     # def draw(self,x,y):
     #     if self.board[x,y] > 1:
@@ -60,8 +63,8 @@ class Drawing:
 
     #         self.controller.moveAt(x,y,True,adjacent)
     #         self.board[x,y] = 1
-            if (self.scene == self.board).all():
-                break
+            # if (self.scene == self.board).all():
+            #     break
 
     # def draw(self,x,y):
     #     print(f"(x,y)=({x},{y},{self.scene[x,y]})")

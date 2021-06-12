@@ -20,6 +20,7 @@ class Controller:
         self.z = False
 
     def moveAt(self,x,y,draw=False,adjacent=False,left=True):
+        x,y = (int(x),int(y))
         # TODO write code to move at x,y
         self.mx.move(x-self.x)
         self.my.move(y-self.y)

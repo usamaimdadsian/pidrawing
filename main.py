@@ -15,7 +15,7 @@ if __name__ == '__main__':
     img = np.zeros((200,200),np.uint8)
     img[25:75,10:190] = 255
     img[100:160,10:190] = 255
-    img = cv2.resize(img,(0,0), fx=1780/200, fy=1900/200, interpolation = cv2.INTER_AREA)
+    img = cv2.resize(img,(0,0), fx=178/200, fy=190/200, interpolation = cv2.INTER_AREA)
     img[img>0] = 1
 
     scene = img
