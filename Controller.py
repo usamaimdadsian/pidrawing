@@ -9,7 +9,7 @@ class Controller:
     # XMAX = 1900
     # yMax = 1780
     def __init__(self,scene,board):
-        self.mx,self.my = (Motor(11,13),Motor(15,16))
+        self.mx,self.my = (Motor(17,27),Motor(22,23))
         self.x, self.y = (0,0)
 
 
