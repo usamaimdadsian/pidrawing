@@ -38,12 +38,22 @@ class Drawing:
             else:
                 lines.append({"start": index,"end":None})
 
+        self.left = True
         for line in lines:
             x1,y1 = line["start"]
             if line["end"]:
                 x2,y2 = line["end"]
-                self.controller.moveAt(x1*10,y1*10,True,True)
-                self.controller.moveAt(x2*10,y2*10,True,False)
+                x,y = self.controller.currentPos()
+                dis1 = math.sqrt((x1-x)**2+(y1-y)**2)
+                dis2 = math.sqrt((x2-x)**2+(y2-y)**2)
+                self.left = (dis1 < dis2)
+                if self.left:
+                    self.controller.moveAt(x1*10,y1*10,True,True)
+                    self.controller.moveAt(x2*10,y2*10,True,False)
+                else:
+                    self.controller.moveAt(x2*10,y2*10,True,True)
+                    self.controller.moveAt(x1*10,y1*10,True,False)
+
             else:
                 self.controller.moveAt(x1*10,y1*10,True,False)
             # break

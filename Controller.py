@@ -28,6 +28,9 @@ class Controller:
         self.x, self.y = (x,y)
         if draw: self.pencil(True)
         if not adjacent: self.pencil(False)
+
+    def currentPos(self):
+        return (int(self.x/10),int(self.y/10))
             
     def pencil(self,draw):
         if draw:
