@@ -60,12 +60,15 @@ class Drawing:
             if lines:
                 line = lines[-1]
                 if line["end"]:
-                    if self.checkAdjacent(line["end"],index):
+                    if checkAdjacent(line["end"],index):
                         lines[-1]["end"] = index
                     else:
                         lines.append({"start":index,"end":None})
                 else:
-                    lines[-1]["end"] = index
+                    if checkAdjacent(line["start"],index):
+                        lines[-1]["end"] = index
+                    else:
+                        lines.append({"start":index,"end":None})
             else:
                 lines.append({"start": index,"end":None})
 
