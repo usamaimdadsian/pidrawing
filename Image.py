@@ -2,7 +2,7 @@ import cv2
 
 class Image:
     def __init__(self, img, category):
-        img_y, img_x = self.oimg.shape[:2]
+        img_y, img_x = img.shape[:2]
         img = cv2.resize(img, (0,0), fx=178/img_x, fy=200/img_y, interpolation = cv2.INTER_AREA)
 
         if category == "edge":
@@ -23,7 +23,7 @@ class Image:
 
 
         # Edge Detection
-        imgBlurredColour = cv2.GaussianBlur(self.oimg, (7,7),0) #blurs to soften edges, really sure how effetive this is yet
+        imgBlurredColour = cv2.GaussianBlur(img, (7,7),0) #blurs to soften edges, really sure how effetive this is yet
         imgBlurredBlackWhite = cv2.GaussianBlur(self.bwimg, (7,7),0)
 
         imgOutlinedColour = cv2.Canny(imgBlurredColour, 100, 200) #for colour 
