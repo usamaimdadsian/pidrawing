@@ -7,6 +7,37 @@ class Drawing:
         self.controller = Controller(scene,board)
         self.end = False
 
+    def drawFancy(self):
+        indexes = np.where(self.scene == 1)
+        indexes = list(zip(indexes[0],indexes[1]))
+        points = []
+        lines = []
+
+
+        for i in range(len(indexes)):
+            if not indexes[i] in points: points.append(indexes[i])
+            for j, point in enumerate(indexes):
+                if (not points[-1] ==  indexes[j]) and checkAdjacent(points[-1],indexes[j]) and (not indexes[i] in points):
+                    points.append(indexes[j])
+
+        head = 0
+        for i,point in enumerate(points):
+            if not head:
+                head =  i
+            elif i < len(points)-1 and (not checkAdjacent(point,points[i+1])):
+                lines.append(points[head:i+1])
+                head = None
+
+        for line in lines:
+            for i,point in enumerate(line):
+                x,y = point
+                if i == len(line)-1:
+                    self.controller.moveAt(x*10,y*10,True,False)
+                else:
+                    self.controller.moveAt(x*10,y*10,True,True)
+        self.controller.initPos()
+                
+        
 
     def startDrawing(self):
         # self.left = True

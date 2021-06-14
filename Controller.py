@@ -1,4 +1,5 @@
 import time
+import threading
 import numpy as np
 from Motor import Motor
 import RPi.GPIO as GPIO
@@ -22,8 +23,15 @@ class Controller:
     def moveAt(self,x,y,draw=False,adjacent=False,left=True):
         x,y = (int(x),int(y))
         # TODO write code to move at x,y
-        self.mx.move(x-self.x)
-        self.my.move(y-self.y)
+        t1 = threading.Thread(target=self.mx.move,args=(x-self.x,))
+        t2 = threading.Thread(target=self.mx.move,args=(y-self.y,))
+        # self.mx.move(x-self.x)
+        # self.my.move(y-self.y)
+        t1.start()
+        t2.start()
+
+        t1.join()
+        t2.join()
 
         self.x, self.y = (x,y)
         if draw: self.pencil(True)
