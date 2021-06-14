@@ -24,7 +24,7 @@ class Controller:
         x,y = (int(x),int(y))
         # TODO write code to move at x,y
         t1 = threading.Thread(target=self.mx.move,args=(x-self.x,))
-        t2 = threading.Thread(target=self.mx.move,args=(y-self.y,))
+        t2 = threading.Thread(target=self.my.move,args=(y-self.y,))
         # self.mx.move(x-self.x)
         # self.my.move(y-self.y)
         t1.start()
