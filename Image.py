@@ -1,18 +1,20 @@
 import cv2
 
 class Image:
-    def __init__(self, img):
-        self.prepareImage(img)
-
-    def prepareImage(self,img):
-        # Resize Image
-        img_x, img_y = img.shape[:2]
-        rescaleFactor = 200/img_x if (img_x > img_y) else 200/img_y
-        self.oimg = cv2.resize(img, (0,0), fx=rescaleFactor, fy=rescaleFactor, interpolation = cv2.INTER_AREA) #common interpolation for shrinking
+    def __init__(self, img, category):
         img_y, img_x = self.oimg.shape[:2]
+        img = cv2.resize(img, (0,0), fx=178/img_x, fy=200/img_y, interpolation = cv2.INTER_AREA)
 
+        if category == "edge":
+            self.edgeImage(img)
+        elif category == "sketch":
+            self.sketchImage(img)
+        else:
+            self.testImage()
+
+    def edgeImage(self,img):
         # Convert to black and white
-        gimg = cv2.cvtColor(self.oimg,cv2.COLOR_BGR2GRAY)
+        gimg = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
         (thresh, bwimg) = cv2.threshold(gimg, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         self.bwimg = bwimg
         self.gimg = gimg
@@ -31,8 +33,30 @@ class Image:
         #so that we can merge all three together to get better acuracy of the image
 
         imgOutlinedTemp = cv2.addWeighted(imgOutlinedBlackWhite,1,imgOutlinedColour,1,0) #merges two photos together
-        imgOutlined = cv2.addWeighted(imgOutlinedTemp,1,imgOutlinedGrayscale,1,0)#merges a third to it
+        img = cv2.addWeighted(imgOutlinedTemp,1,imgOutlinedGrayscale,1,0)#merges a third to it
+        img[img>0] = 1
         # imgOutlined = cv2.bitwise_not(imgOutlined)
-        self.eimg = imgOutlined
+        self.rimg = img
 
 
+    def sketchImage(self,img):
+        self.gimg = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        igimg = 255 - gimg
+        blurred_img = cv2.GaussianBlur(igimg, (21,21),0)
+        inv_blurred_img = 255 - blurred_img
+        pencil_sketch_img = cv2.divide(gimg,inv_blurred_img, scale = 256.0)
+        pencil_sketch_img = cv2.bitwise_not(pencil_sketch_img)
+        pencil_sketch_img[pencil_sketch_img>127] = 255
+        img = pencil_sketch_img
+        img = cv2.medianBlur(img,11)
+        img[img > 127] =1
+        self.rimg = img
+
+    def testImage(self,img):
+        import numpy as np
+        img = np.zeros((200,200),np.uint8)
+        img[25:75,10:190] = 255
+        img[100:160,10:190] = 255
+        img = cv2.resize(img,(0,0), fx=178/200, fy=190/200, interpolation = cv2.INTER_AREA)
+        img[img>0] = 1
+        self.rimg = img

@@ -35,11 +35,11 @@ class Controller:
     def pencil(self,draw):
         if draw:
             # TODO Write code to move servo for drawing 
-            self.p.ChangeDutyCycle(5)
+            self.p.ChangeDutyCycle(11)
             self.z = True
         else:
             # TODO code to move pencil to initial position
-            self.p.ChangeDutyCycle(11)
+            self.p.ChangeDutyCycle(5)
             self.z = False
         time.sleep(0.5)
     
