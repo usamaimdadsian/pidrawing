@@ -17,14 +17,14 @@ class Drawing:
         for i in range(len(indexes)):
             if not indexes[i] in points: points.append(indexes[i])
             for j, point in enumerate(indexes):
-                if (not points[-1] ==  indexes[j]) and checkAdjacent(points[-1],indexes[j]) and (not indexes[i] in points):
+                if (not points[-1] ==  indexes[j]) and self.checkAdjacent(points[-1],indexes[j]) and (not indexes[i] in points):
                     points.append(indexes[j])
 
         head = 0
         for i,point in enumerate(points):
             if not head:
                 head =  i
-            elif i < len(points)-1 and (not checkAdjacent(point,points[i+1])):
+            elif i < len(points)-1 and (not self.checkAdjacent(point,points[i+1])):
                 lines.append(points[head:i+1])
                 head = None
 
@@ -60,12 +60,12 @@ class Drawing:
             if lines:
                 line = lines[-1]
                 if line["end"]:
-                    if checkAdjacent(line["end"],index):
+                    if self.checkAdjacent(line["end"],index):
                         lines[-1]["end"] = index
                     else:
                         lines.append({"start":index,"end":None})
                 else:
-                    if checkAdjacent(line["start"],index):
+                    if self.checkAdjacent(line["start"],index):
                         lines[-1]["end"] = index
                     else:
                         lines.append({"start":index,"end":None})
