@@ -15,23 +15,31 @@ class Drawing:
 
 
         for i in range(len(indexes)):
-            if not indexes[i] in points: points.append(indexes[i])
             for j, point in enumerate(indexes):
-                if (not points[-1] ==  indexes[j]) and self.checkAdjacent(points[-1],indexes[j]) and (not indexes[i] in points):
-                    points.append(indexes[j])
+                if points:
+                    if (not points[-1] ==  indexes[j]) and checkAdjacent(points[-1],indexes[j]) and (not indexes[j] in points):
+                        points.append(indexes[j])
+                else:
+                    points.append(indexes[i])
+            if not indexes[i] in points:
+                points.append(indexes[i])
 
-        head = 0
+        head = -1
         for i,point in enumerate(points):
-            if not head:
+            if head < 0:
                 head =  i
-            elif i < len(points)-1 and (not self.checkAdjacent(point,points[i+1])):
+            if i < len(points)-1 and (not checkAdjacent(point,points[i+1])):
                 lines.append(points[head:i+1])
-                head = None
+                head = -1
+            else:
+                if i == len(points)-1:
+                    lines.append([point])
+
 
         for line in lines:
             for i,point in enumerate(line):
                 x,y = point
-                if i == len(line)-1:
+                if point == points[-1]:
                     self.controller.moveAt(x*10,y*10,True,False)
                 else:
                     self.controller.moveAt(x*10,y*10,True,True)
