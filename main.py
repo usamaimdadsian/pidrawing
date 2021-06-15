@@ -16,6 +16,7 @@ if __name__ == '__main__':
         value = GPIO.input(inPin)
         if value:
             print("Button pressed")
+            break
     # img = cv2.imread('index.jpeg')
     # img_o = Image(img,'edge')
     # img = img_o.rimg
