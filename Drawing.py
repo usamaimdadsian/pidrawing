@@ -45,7 +45,47 @@ class Drawing:
                     self.controller.moveAt(x*10,y*10,True,True)
         self.controller.initPos()
                 
-        
+    def accurateDraw(self):
+        indexes = np.where(self.scene == 1)
+        indexes = list(zip(indexes[0],indexes[1]))
+
+        # Get all adjacent points and place them next to each others
+        points = []
+        lines = []
+
+        while len(indexes) > 0:
+            if len(points) == 0:
+                points.append(indexes[0])
+                indexes.remove(indexes[0])
+            else:
+                indexes_len = len(indexes)
+                data = self.findAdjacent(points[-1],indexes,points)
+                if data:
+                    _,indexes,points = data
+                elif indexes_len == len(indexes):
+                    points.append(indexes[0])
+                    indexes.remove(indexes[0])
+
+        for i,point in enumerate(points):
+            if i < len(points)-1:
+                x,y = point
+                if self.checkAdjacent(point,points[i+1]):
+                    self.controller.moveAt(x*10,y*10,True,True)
+                else:
+                    self.controller.moveAt(x*10,y*10,True,False)
+
+        self.initPos()
+
+    def findAdjacent(self,index,indexes,points):
+        for i in range(-1,2):
+            for j in range(-1,2):
+                x,y = index
+                if (x+i,y+j) in indexes:
+                    point = (x+i, y+j) 
+                    if point in indexes and (not point in points):
+                        points.append(point)
+                        indexes.remove(point)
+                        return (point,indexes,points)
 
     def startDrawing(self):
         # self.left = True
