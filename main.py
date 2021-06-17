@@ -20,16 +20,16 @@ if __name__ == '__main__':
             camera = PiCamera()
             camera.rotation = 180
             camera.start_preview()
-            camera.capture('t2.png')
+            camera.capture('images/t2.png')
             camera.stop_preview()
 
-            img = cv2.imread('t2.png')
+            img = cv2.imread('images/t2.png')
             img_o = Image(img,'edge')
             img = img_o.rimg
             
             rimg = img.copy()
             rimg[img == 1] = 255
-            cv2.imwrite("rt2.png",rimg)
+            cv2.imwrite("images/rt2.png",rimg)
 
 
             # img = cv2.imread('index.jpeg')

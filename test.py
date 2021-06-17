@@ -9,7 +9,7 @@ if __name__ == '__main__':
     # img_o = Image(img,'edge')
     # img = img_o.rimg
 
-    img = cv2.imread('t1.png',0)
+    img = cv2.imread('images/t1.png',0)
     img[img>0] = 1
     # img[img > 127] = 150
     # img[img < 127] = 1
