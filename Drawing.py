@@ -74,7 +74,7 @@ class Drawing:
                 else:
                     self.controller.moveAt(x*10,y*10,True,False)
 
-        self.initPos()
+        self.controller.initPos()
 
     def findAdjacent(self,index,indexes,points):
         for i in range(-1,2):
