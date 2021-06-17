@@ -23,8 +23,8 @@ class Controller:
     def moveAt(self,x,y,draw=False,adjacent=False,left=True):
         x,y = (int(x),int(y))
         # TODO write code to move at x,y
-        t1 = threading.Thread(target=self.mx.move,args=(x-self.x,0.0005,))
-        t2 = threading.Thread(target=self.my.move,args=(y-self.y,0.0005,))
+        t1 = threading.Thread(target=self.mx.move,args=(x-self.x,0,))
+        t2 = threading.Thread(target=self.my.move,args=(y-self.y,0,))
         # self.mx.move(x-self.x)
         # self.my.move(y-self.y)
         t1.start()
@@ -34,8 +34,8 @@ class Controller:
         t2.join()
 
         self.x, self.y = (x,y)
-        if draw: self.pencil(True)
-        if not adjacent: self.pencil(False)
+        if draw and (not self.z): self.pencil(True)
+        if (not adjacent) and self.z: self.pencil(False)
 
     def currentPos(self):
         return (int(self.x/10),int(self.y/10))

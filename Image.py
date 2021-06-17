@@ -3,7 +3,7 @@ import cv2
 class Image:
     def __init__(self, img, category):
         img_y, img_x = img.shape[:2]
-        img = cv2.resize(img, (0,0), fx=178/img_x, fy=200/img_y, interpolation = cv2.INTER_AREA)
+        img = cv2.resize(img, (0,0), fx=200/img_x, fy=178/img_y, interpolation = cv2.INTER_AREA)
 
         if category == "edge":
             self.edgeImage(img)

@@ -26,6 +26,16 @@ if __name__ == '__main__':
             img = cv2.imread('t2.png')
             img_o = Image(img,'edge')
             img = img_o.rimg
+            
+            rimg = img.copy()
+            rimg[img == 1] = 255
+            cv2.imwrite("rt2.png",rimg)
+
+
+            # img = cv2.imread('index.jpeg')
+            # img_o = Image(img,'edge')
+            # img = img_o.rimg
+            # print(np.unique(img))
 
             scene = img
             board = np.zeros_like(scene)
