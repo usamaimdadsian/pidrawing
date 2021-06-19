@@ -36,7 +36,7 @@ class Drawing:
         for line in lines:
             for i,point in enumerate(line):
                 x,y = point
-                if point == points[-1]:
+                if point == line[-1] or not self.checkAdjacent(point,line[i+1]):
                     self.controller.moveAt(x*10,y*10,True,False)
                 else:
                     self.controller.moveAt(x*10,y*10,True,True)
