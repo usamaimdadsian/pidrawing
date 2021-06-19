@@ -2,6 +2,7 @@
 import cv2
 import math
 import numpy as np
+import multiprocessing as mp
 from Controller import Controller
 class Drawing:
     def __init__(self,scene,board):
@@ -16,6 +17,7 @@ class Drawing:
     def bestDraw(self):
         ret, labels = cv2.connectedComponents(self.scene)
         f_points = []
+        p = mp.Pool(mp.cpu_count())
         for j in range(1,np.unique(labels).max()+1):
             label = np.zeros_like(labels)
             label[labels == j] = 1
@@ -26,12 +28,11 @@ class Drawing:
 
             table_sorted = {}
             for st_point in indexes:
-                point_arr = []
-                point_val = []
-                for point in indexes:
-                    point_arr.append(point)
-                    dis = self.findDistance(st_point,point)
-                    point_val.append(dis)
+                point_arr1 = [st_point]*len(indexes)
+                point_arr = indexes
+
+                point_tr = list(zip(point_arr1,point_arr))
+                point_val = p.map(self.findDistance,point_tr)
 
                 points = [x for _, x in sorted(zip(point_val, point_arr))]
                 table_sorted[points[0]] = points
@@ -46,7 +47,7 @@ class Drawing:
                         break
 
             f_points.append(points)
-
+        p.close()
         
         for line in f_points:
             for i,point in enumerate(line):
@@ -58,7 +59,8 @@ class Drawing:
         self.controller.initPos()
 
     
-    def findDistance(self,ind1,ind2):
+    def findDistance(self,ind):
+        ind1,ind2 = ind
         com_point = (ind1,ind2)
         if (com_point in self.dis_index) or ((ind2,ind1) in self.dis_index):
             if com_point in self.dis_index:
