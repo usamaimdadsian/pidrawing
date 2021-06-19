@@ -1,3 +1,5 @@
+
+import cv2
 import math
 import numpy as np
 from Controller import Controller
@@ -6,6 +8,71 @@ class Drawing:
         self.board,self.scene = (board,scene)
         self.controller = Controller(scene,board)
         self.end = False
+
+        self.dis_index = []
+        self.dis_value = []
+
+
+    def bestDraw(self):
+        ret, labels = cv2.connectedComponents(self.scene)
+        f_points = []
+        for j in range(1,np.unique(labels).max()+1):
+            label = np.zeros_like(labels)
+            label[labels == j] = 1
+
+
+            indexes = np.where(label == 1)
+            indexes = list(zip(indexes[0],indexes[1]))
+
+            table_sorted = {}
+            for st_point in indexes:
+                point_arr = []
+                point_val = []
+                for point in indexes:
+                    point_arr.append(point)
+                    dis = self.findDistance(st_point,point)
+                    point_val.append(dis)
+
+                points = [x for _, x in sorted(zip(point_val, point_arr))]
+                table_sorted[points[0]] = points
+
+            points = [indexes[0]]
+            while len(points) < len(indexes):
+                temp = points[-1]
+                temp_arr = table_sorted[temp]
+                for t_ele in temp_arr:
+                    if not t_ele in points:
+                        points.append(t_ele)
+                        break
+
+            f_points.append(points)
+
+        
+        for line in f_points:
+            for i,point in enumerate(line):
+                x,y = point
+                if point == points[-1]:
+                    self.controller.moveAt(x*10,y*10,True,False)
+                else:
+                    self.controller.moveAt(x*10,y*10,True,True)
+        self.controller.initPos()
+
+    
+    def findDistance(self,ind1,ind2):
+        com_point = (ind1,ind2)
+        if (com_point in self.dis_index) or ((ind2,ind1) in self.dis_index):
+            if com_point in self.dis_index:
+                return self.dis_value[self.dis_index.index(com_point)]
+            else:
+                return self.dis_value[self.dis_index.index((ind2,ind1))]
+        else:
+            x1,y1 = ind1
+            x2,y2 = ind2
+            dis = math.sqrt((x2-x1)**2+(y2-y1)**2)
+
+            self.dis_index.append(com_point)
+            self.dis_value.append(dis)
+            return dis
 
     def drawFancy(self):
         indexes = np.where(self.scene == 1)

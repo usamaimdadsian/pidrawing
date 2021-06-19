@@ -23,8 +23,8 @@ class Controller:
     def moveAt(self,x,y,draw=False,adjacent=False,left=True):
         x,y = (int(x),int(y))
         # TODO write code to move at x,y
-        t1 = threading.Thread(target=self.mx.move,args=(x-self.x,0,))
-        t2 = threading.Thread(target=self.my.move,args=(y-self.y,0,))
+        t1 = threading.Thread(target=self.mx.move,args=(x-self.x,))
+        t2 = threading.Thread(target=self.my.move,args=(y-self.y,))
         # self.mx.move(x-self.x)
         # self.my.move(y-self.y)
         t1.start()
@@ -49,7 +49,7 @@ class Controller:
             # TODO code to move pencil to initial position
             self.p.ChangeDutyCycle(5)
             self.z = False
-        time.sleep(0.5)
+        time.sleep(0.05)
     
     def initPos(self):
         self.pencil(False)

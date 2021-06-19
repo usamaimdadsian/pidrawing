@@ -18,4 +18,4 @@ if __name__ == '__main__':
     scene = img
     board = np.zeros_like(scene)
     d = Drawing(scene,board)
-    d.accurateDraw()
+    d.bestDraw()
