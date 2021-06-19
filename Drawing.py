@@ -2,7 +2,6 @@
 import cv2
 import math
 import numpy as np
-import multiprocessing as mp
 from Controller import Controller
 class Drawing:
     def __init__(self,scene,board):
@@ -16,8 +15,7 @@ class Drawing:
 
     def bestDraw(self):
         ret, labels = cv2.connectedComponents(self.scene)
-        f_points = []
-        p = mp.Pool(mp.cpu_count())
+        lines = []
         for j in range(1,np.unique(labels).max()+1):
             label = np.zeros_like(labels)
             label[labels == j] = 1
@@ -26,30 +24,16 @@ class Drawing:
             indexes = np.where(label == 1)
             indexes = list(zip(indexes[0],indexes[1]))
 
-            table_sorted = {}
-            for st_point in indexes:
-                point_arr1 = [st_point]*len(indexes)
-                point_arr = indexes
-
-                point_tr = list(zip(point_arr1,point_arr))
-                point_val = p.map(self.findDistance,point_tr)
-
-                points = [x for _, x in sorted(zip(point_val, point_arr))]
-                table_sorted[points[0]] = points
 
             points = [indexes[0]]
             while len(points) < len(indexes):
-                temp = points[-1]
-                temp_arr = table_sorted[temp]
-                for t_ele in temp_arr:
-                    if not t_ele in points:
-                        points.append(t_ele)
-                        break
-
-            f_points.append(points)
-        p.close()
+                node = points[-1]
+                nodes = list(set(indexes)-set(points))
+                
+                points.append(self.closest_node(node,nodes))
+            lines.append(points)
         
-        for line in f_points:
+        for line in lines:
             for i,point in enumerate(line):
                 x,y = point
                 if point == points[-1]:
@@ -59,22 +43,11 @@ class Drawing:
         self.controller.initPos()
 
     
-    def findDistance(self,ind):
-        ind1,ind2 = ind
-        com_point = (ind1,ind2)
-        if (com_point in self.dis_index) or ((ind2,ind1) in self.dis_index):
-            if com_point in self.dis_index:
-                return self.dis_value[self.dis_index.index(com_point)]
-            else:
-                return self.dis_value[self.dis_index.index((ind2,ind1))]
-        else:
-            x1,y1 = ind1
-            x2,y2 = ind2
-            dis = math.sqrt((x2-x1)**2+(y2-y1)**2)
-
-            self.dis_index.append(com_point)
-            self.dis_value.append(dis)
-            return dis
+    def closest_node(self,node, nodes):
+        nodes = np.asarray(nodes)
+        dist_2 = np.sum((nodes - node)**2, axis=1)
+        node = nodes[np.argmin(dist_2)]
+        return (node[0],node[1])
 
     def drawFancy(self):
         indexes = np.where(self.scene == 1)
