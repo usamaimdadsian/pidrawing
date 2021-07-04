@@ -1,11 +1,12 @@
 import RPi.GPIO as GPIO
-from RpiMotorLib import RpiMotorLib
+# from RpiMotorLib import RpiMotorLib
+from a4988 import A4988Nema
 import time
 
 
 class Motor:
     def __init__(self,dir_pin,step_pin):
-        self.motor = RpiMotorLib.A4988Nema(dir_pin, step_pin, (21,21,21), "DRV8825") #Here MS1,MS2,MS3 are all connected to 21 and equal to zero
+        self.motor = A4988Nema(dir_pin, step_pin, (21,21,21), "DRV8825") #Here MS1,MS2,MS3 are all connected to 21 and equal to zero
         self.dir_pin,self.step_pin = (dir_pin,step_pin)
 
     def move(self,steps,delay=0.05):
