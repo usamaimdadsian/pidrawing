@@ -49,7 +49,7 @@ class Controller:
             # TODO code to move pencil to initial position
             self.p.ChangeDutyCycle(5)
             self.z = False
-        time.sleep(0.05)
+        time.sleep(0.5)
     
     def initPos(self):
         self.pencil(False)
